@@ -11,4 +11,8 @@ public class IncommAccount {
     public int getBalance() {
         return balance;
     }
+
+    public String getUserAccount() {
+        return id;
+    }
 }

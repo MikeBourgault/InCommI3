@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.widget.PopupWindowCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
@@ -146,8 +148,8 @@ public class MainActivity extends Activity {
     Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://incomm-act-mgt.appspot.com").addConverterFactory(GsonConverterFactory.create()
     );
 
-    Retrofit retrofit = builder.client(httpClient.build()).build();
-    IncommAccount client = retrofit.create(OkHttpClient.class);
+    public Retrofit retrofit = builder.client(httpClient.build()).build();
+    public IncommAccount client = retrofit.create(OkHttpClient.class);
 
     private void getUserAccount() {
         Call<IncommAccount> call = client.getUserAccount(authToken);
