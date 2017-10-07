@@ -17,11 +17,10 @@
     <TextView
         android:id="@+id/token"
         android:layout_width="match_parent"
-        android:layout_height="148dp"
+        android:layout_height="37dp"
         android:gravity="center"
         android:text="Not logged in"
-        android:textSize="21sp"
-        android:layout_weight="0.37" />
+        android:textSize="21sp" />
 
     <Button
         android:id="@+id/loginButton"
@@ -29,4 +28,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:text="Log in" />
+
 </LinearLayout>
