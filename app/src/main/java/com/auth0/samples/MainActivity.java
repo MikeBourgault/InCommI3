@@ -19,6 +19,15 @@ import com.auth0.android.result.Credentials;
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+
 
 public class MainActivity extends Activity {
 
@@ -128,6 +137,8 @@ public class MainActivity extends Activity {
 
     Retrofit retrofit = builder.client(httpClient.build()).build();
     client = retrofit.create(ApiClient.class);
+
+    
 
 }
 
