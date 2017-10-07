@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <ImageView
         android:id="@+id/imageView"
@@ -10,20 +11,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo" />
+        android:src="@drawable/RotateLogo"
+        android:layout_weight="0.23" />
+
+    <TextView
+        android:id="@+id/token"
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:gravity="center"
+        android:text="Not logged in"
+        android:textSize="21sp"
+        android:layout_weight="0.37" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="Show Log in" />
-
-    <TextView
-        android:id="@+id/token"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Not logged in"
-        android:textSize="21sp" />
+        android:text="Log in" />
 </LinearLayout>
