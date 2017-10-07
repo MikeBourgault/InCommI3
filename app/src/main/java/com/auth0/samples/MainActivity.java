@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.auth0.android.Auth0;
 import com.auth0.android.authentication.AuthenticationException;
@@ -138,7 +139,33 @@ public class MainActivity extends Activity {
     Retrofit retrofit = builder.client(httpClient.build()).build();
     client = retrofit.create(ApiClient.class);
 
-    
+    private void createUserAccount() {
+        Call<IncommAccount> call = client.getUserAccount(authToken);
+
+        call.enqueue(new Callback<IncommAccount>() {
+            @Override
+            public void onResponse(Call<IncommAccount> call, Response<IncommAccount> response) {
+                if (response.code == 200) {
+                    balance == response.body().getBalance();
+                    ((TextView) findViewById(R.id.balanceText)).setText(String.format("$%d.%02d", balance / 100, balance % 100));
+                } else if(response.code() == 401) {
+                    ((TextView) findViewById(R.id.balanceText)).setText("Authorization Error.");
+                } else if(response.code() == 404) {
+                    createAccount();
+                } else {
+                    ((TextView) findViewById(R.id.balanceText)).setText("Something went wrong with account details.");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<IncommAccount> call, Throwable t) {
+
+            }
+        });
+    }
+
+
 
 }
 
