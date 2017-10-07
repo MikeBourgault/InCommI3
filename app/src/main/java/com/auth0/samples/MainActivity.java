@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +23,7 @@ import com.auth0.android.result.Credentials;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
@@ -31,11 +31,13 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends Activity {
 
     private TextView token;
+    public static boolean ifDebitInLast10Secs = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class MainActivity extends Activity {
                             public void run() {
                                 token.setText("Logged in: " + credentials.getAccessToken());
                                 Log.d("Jwt token", credentials.getAccessToken());
+
                             }
                         });
                     }
@@ -126,13 +129,13 @@ public class MainActivity extends Activity {
         Call<IncommAccount> getUserAccount(@Header("Authorization") String authToken);
 
         @POST("/api/transactions")
-        Call<Transaction> createTransaction(@Body TransactionBody data, @Header("Authorization") String authToken);
+        Call<List<Transaction>> createTransaction(@Body Transaction data, @Header("Authorization") String authToken);
 
         @GET("/api/transactions")
-        Call<List<Transactions>> getAllTransactions(@Header("Authorization") String authToken);
+        Call<List<Transaction>> getAllTransactions(@Header("Authorization") String authToken);
 
         @GET("/api/transactions/(id)")
-        Call<Transaction> getTransaction(@Path("id") String id, @Header("Authorization") String authToken);
+        Call<List<Transaction>> getTransaction(@Path("id") String id, @Header("Authorization") String authToken);
 
     }
 
@@ -140,25 +143,26 @@ public class MainActivity extends Activity {
 
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    Retrofit.Builder builder = new Retrofit.Builder().baseUrl(API_BASE_URL).addConverterFactory(GsonConverterFactory.create()
+    Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://incomm-act-mgt.appspot.com").addConverterFactory(GsonConverterFactory.create()
     );
 
     Retrofit retrofit = builder.client(httpClient.build()).build();
-    OkHttpClient client = new OkHttpClient();
-    client = retrofit.create(ApiClient.class);
+    IncommAccount client = retrofit.create(OkHttpClient.class);
 
-    /*private void createUserAccount() {
+    private void getUserAccount() {
         Call<IncommAccount> call = client.getUserAccount(authToken);
 
         call.enqueue(new Callback<IncommAccount>() {
             @Override
             public void onResponse(Call<IncommAccount> call, Response<IncommAccount> response) {
+                // The call was a success.  We successfully got a response
                 if (response.code() == 200) {
                     int balance = response.body().getBalance();
                     ((TextView) findViewById(R.id.balanceText)).setText(String.format("$%d.%02d", balance / 100, balance % 100));
                 } else if(response.code() == 401) {
                     ((TextView) findViewById(R.id.balanceText)).setText("Authorization Error.");
                 } else if(response.code() == 404) {
+                    // User account doesn't exist, need to create one
                     createUserAccount();
                 } else {
                     ((TextView) findViewById(R.id.balanceText)).setText("Something went wrong with account details.");
@@ -168,13 +172,23 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFailure(Call<IncommAccount> call, Throwable t) {
-
+                // The call failed.
+                // TODO: Handle the Error
             }
         });
-    }*/
+    }
 
+    private void createUserAccount() {
+        Call<IncommAccount> call = client.createUserAccount(authToken);
 
+        call.enqueue(new Callback<IncommAccount>() {
+            @Override
+            public void onResponse(Call<IncommAccount> call, Response<IncommAccount> response) {
+                if (response.code() == 200) {
+                    ((TextView) findViewById(R.id.balanceText)).setText(String.format("$%d.%02d", balance / 100, balance % 100));
+                }
+            }
+        });
+    }
 
 }
-
-
