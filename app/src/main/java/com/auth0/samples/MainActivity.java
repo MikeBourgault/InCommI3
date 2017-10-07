@@ -2,10 +2,13 @@ package com.auth0.samples;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,8 +56,10 @@ public class MainActivity extends Activity {
         Auth0 auth0 = new Auth0(this);
         auth0.setOIDCConformant(true);
         WebAuthProvider.init(auth0)
-                .withScheme("demo")
-                .withAudience(String.format("https://incomm-act-mgt.appspot.com", getString(R.string.com_auth0_domain)))
+                .withScheme("https")
+               // .withAudience(String.format("https://incomm-act-mgt.appspot.com", getString(R.string.com_auth0_domain)))
+                .withAudience("https://incomm-act-mgt.appspot.com")
+                .withScope("openid read:accounts read:transactions write:transactions")
                 .start(MainActivity.this, new AuthCallback() {
                     @Override
                     public void onFailure(@NonNull final Dialog dialog) {
@@ -82,6 +87,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 token.setText("Logged in: " + credentials.getAccessToken());
+                                Log.d("Jwt token", credentials.getAccessToken());
                             }
                         });
                     }
@@ -111,6 +117,7 @@ public class MainActivity extends Activity {
         }
     }*/
 
+
     public interface ApiClient {
         @POST("/api/accounts")
         Call<IncommAccount> createUserAccount(@Header("Authorization") String authToken);
@@ -129,7 +136,7 @@ public class MainActivity extends Activity {
 
     }
 
-    authToken = "Bearer " + getIntent().getExtras().getString("ACCESS_TOKEN");
+    String authToken = "Bearer " + getIntent().getExtras().getString("ACCESS_TOKEN");
 
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
@@ -137,21 +144,22 @@ public class MainActivity extends Activity {
     );
 
     Retrofit retrofit = builder.client(httpClient.build()).build();
+    OkHttpClient client = new OkHttpClient();
     client = retrofit.create(ApiClient.class);
 
-    private void createUserAccount() {
+    /*private void createUserAccount() {
         Call<IncommAccount> call = client.getUserAccount(authToken);
 
         call.enqueue(new Callback<IncommAccount>() {
             @Override
             public void onResponse(Call<IncommAccount> call, Response<IncommAccount> response) {
-                if (response.code == 200) {
-                    balance == response.body().getBalance();
+                if (response.code() == 200) {
+                    int balance = response.body().getBalance();
                     ((TextView) findViewById(R.id.balanceText)).setText(String.format("$%d.%02d", balance / 100, balance % 100));
                 } else if(response.code() == 401) {
                     ((TextView) findViewById(R.id.balanceText)).setText("Authorization Error.");
                 } else if(response.code() == 404) {
-                    createAccount();
+                    createUserAccount();
                 } else {
                     ((TextView) findViewById(R.id.balanceText)).setText("Something went wrong with account details.");
                 }
@@ -163,7 +171,7 @@ public class MainActivity extends Activity {
 
             }
         });
-    }
+    }*/
 
 
 
