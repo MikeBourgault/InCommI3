@@ -43,8 +43,9 @@ public class debit_Transaction_Notification_Service extends Service {
     private SharedPreferences preferences;
     public Retrofit retrofit = builder.client(httpClient.build()).build();
     public ApiClient client = retrofit.create(ApiClient.class);
-    private String realAuthToken;
-    private String lastId;
+    private String lastId = "";
+    public String authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9VVXhRVVF4UXpGQ1JrWTVSVUUwUWpORk0wVTJPRGt6UmpNME9VSTRORGRHTnpkR056YzFOUSJ9.eyJodHRwczovL2luY29tbS1hY3QtbWd0LmFwcHNwb3QuY29tL2p0aSI6ImViMjliYWM1LWQ4MzAtNDJlMi1hYWExLTkxMGNjN2E3MjRlNCIsImlzcyI6Imh0dHBzOi8vamdlb3JnZS1pbmNvbW0uYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTEyNTE1OTQ1NTI5MDMyMTM1NTg4IiwiYXVkIjpbImh0dHBzOi8vaW5jb21tLWFjdC1tZ3QuYXBwc3BvdC5jb20iLCJodHRwczovL2pnZW9yZ2UtaW5jb21tLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MDc0NDU2OTgsImV4cCI6MTUwNzUzMjA5OCwiYXpwIjoicU5TREREVEFvNFc1aHg1M0ozbVEzOUYzNjkwWkgyU0kiLCJzY29wZSI6Im9wZW5pZCByZWFkOmFjY291bnQgcmVhZDp0cmFuc2FjdGlvbnMgd3JpdGU6dHJhbnNhY3Rpb25zIn0.bZ7d-oLVrwnpkOzF2L0B3Hy2LianXhWom9ryHVkhgO_cxY9bydIC7vWMSizW6V_7F6kDOhNeN7GX_ZjaaEqT-YLu62A1elLC2GheEEtcjZG7aXs2tiVybYL24ZVP0WMGarHrFDVPP266ZIgoEGxsuP3Igz0-HGjkI9mFWf9UsKW8ESddJPF2hXBhHBlMAFLfK1V3K9HxRgJZfQUh7cGf1sE9TgPSxZYI9OlcXpbU1Ukp8_qTh7__L9PbnTGRh0Gb4DzLbg4Ced5mxtFkFqpajfAOfOELcqLIZmhGFejhCQXL3Bg-Ag42cwZFcsjccLvIQ_xL5T5BuDC9EF7E3AOWew";
+
 
 
 
@@ -54,13 +55,6 @@ public class debit_Transaction_Notification_Service extends Service {
         super.onCreate();
 
         Toast.makeText(this, "Transaction Notification Service Created", Toast.LENGTH_SHORT).show();
-
-        preferences = this.getSharedPreferences("key", MODE_WORLD_WRITEABLE);
-        realAuthToken = preferences.getString("key", "");
-
-        preferences = this.getSharedPreferences("lastId", MODE_WORLD_WRITEABLE);
-        lastId = preferences.getString("lastId", "");
-
 
         boolean isRunning = true;
     }
@@ -98,22 +92,22 @@ public class debit_Transaction_Notification_Service extends Service {
 
     public interface ApiClient {
         @POST("/api/accounts")
-        Call<IncommAccount> createUserAccount(@Header("Authorization") String realAuthToken);
+        Call<IncommAccount> createUserAccount(@Header("Authorization") String authToken);
 
         @GET("/api/accounts")
-        Call<IncommAccount> getUserAccount(@Header("Authorization") String realAuthToken);
+        Call<IncommAccount> getUserAccount(@Header("Authorization") String authToken);
 
         @GET("/api/transactions")
-        Call<List<Transaction>> getAllTransactions(@Header("Authorization") String realAuthToken);
+        Call<List<Transaction>> getAllTransactions(@Header("Authorization") String authToken);
 
         @GET("/api/transactions/(id)")
-        Call<Transaction> getTransaction(@Path("id") String id, @Header("Authorization") String realAuthToken);
+        Call<Transaction> getTransaction(@Path("id") String id, @Header("Authorization") String authToken);
 
     }
 
 
     public void processTransactions() {
-        Call<List<Transaction>> transactions = client.getAllTransactions(realAuthToken);
+        Call<List<Transaction>> transactions = client.getAllTransactions(authToken);
 
         transactions.enqueue(new Callback<List<Transaction>>() {
             @Override
@@ -123,18 +117,16 @@ public class debit_Transaction_Notification_Service extends Service {
                     Transaction lastTransaction = response.body().get(response.body().size() - 1);
                     if (lastTransaction.getType() == "debit") {
                         if(lastId == "") {
+                            Log.d("msg", "1I made it!!!!!!!!!!!!");
                             lastId = lastTransaction.getId();
                         }
                         else if (lastTransaction.getId() != lastId) {
+                            Log.d("msg", "I made it!!!!!!!!!!!!");
                             Intent intent = new Intent(debit_Transaction_Notification_Service.this, you_stopped_here.class);
                             startActivity(intent);
 
                         }
                     }
-
-
-
-
 
                     return;
                 } else if(response.code() == 401) {
@@ -154,6 +146,10 @@ public class debit_Transaction_Notification_Service extends Service {
             }
         });
 
+    }
+    public void onDestroy() {
+        super.onDestroy();
+        boolean isRunning = false;
     }
 
 

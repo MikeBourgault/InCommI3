@@ -40,12 +40,9 @@ import retrofit2.Response;
 
 public class MainActivity extends Activity {
 
-    private TextView token;
     public String authToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9VVXhRVVF4UXpGQ1JrWTVSVUUwUWpORk0wVTJPRGt6UmpNME9VSTRORGRHTnpkR056YzFOUSJ9.eyJodHRwczovL2luY29tbS1hY3QtbWd0LmFwcHNwb3QuY29tL2p0aSI6ImViMjliYWM1LWQ4MzAtNDJlMi1hYWExLTkxMGNjN2E3MjRlNCIsImlzcyI6Imh0dHBzOi8vamdlb3JnZS1pbmNvbW0uYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTEyNTE1OTQ1NTI5MDMyMTM1NTg4IiwiYXVkIjpbImh0dHBzOi8vaW5jb21tLWFjdC1tZ3QuYXBwc3BvdC5jb20iLCJodHRwczovL2pnZW9yZ2UtaW5jb21tLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MDc0NDU2OTgsImV4cCI6MTUwNzUzMjA5OCwiYXpwIjoicU5TREREVEFvNFc1aHg1M0ozbVEzOUYzNjkwWkgyU0kiLCJzY29wZSI6Im9wZW5pZCByZWFkOmFjY291bnQgcmVhZDp0cmFuc2FjdGlvbnMgd3JpdGU6dHJhbnNhY3Rpb25zIn0.bZ7d-oLVrwnpkOzF2L0B3Hy2LianXhWom9ryHVkhgO_cxY9bydIC7vWMSizW6V_7F6kDOhNeN7GX_ZjaaEqT-YLu62A1elLC2GheEEtcjZG7aXs2tiVybYL24ZVP0WMGarHrFDVPP266ZIgoEGxsuP3Igz0-HGjkI9mFWf9UsKW8ESddJPF2hXBhHBlMAFLfK1V3K9HxRgJZfQUh7cGf1sE9TgPSxZYI9OlcXpbU1Ukp8_qTh7__L9PbnTGRh0Gb4DzLbg4Ced5mxtFkFqpajfAOfOELcqLIZmhGFejhCQXL3Bg-Ag42cwZFcsjccLvIQ_xL5T5BuDC9EF7E3AOWew";
 
-    private SharedPreferences realAuthToken;
-    private SharedPreferences.Editor editor;
-    private SharedPreferences lastId;
+
 
 
 
@@ -62,14 +59,7 @@ public class MainActivity extends Activity {
                 login();
             }
         });
-        realAuthToken = getSharedPreferences("key",Context.MODE_PRIVATE);
-        editor = realAuthToken.edit();
-        editor.putString("key",authToken);
-        editor.commit();
-        lastId = getSharedPreferences("lastId",Context.MODE_PRIVATE);
-        editor = lastId.edit();
-        editor.putString("lastId", "");
-    }
+        }
 
     private void login() {
         Log.d("msg","I'm at login start.");
