@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#bababa">
 
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome To nTouch User Settings!"
+        android:textColor="@color/colorPrimaryDark"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:paddingTop="20dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <TextView
         android:id="@+id/firstLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome To nTouch User Settings!"
-        android:textAlignment="center"
         android:paddingTop="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:text="Notification Frequency:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
     <Spinner
         android:id="@+id/spin1"
@@ -23,6 +34,14 @@
 
     </Spinner>
 
+    <TextView
+        android:id="@+id/secondLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:text="Minimum Purchase Price For Notification:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
     <Spinner
         android:id="@+id/spin2"
         android:layout_width="match_parent"
@@ -33,9 +52,43 @@
 
     </Spinner>
 
-    <RadioGroup
+    <TextView
+        android:id="@+id/thirdLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/radioGroup">
+        android:layout_weight="1"
+        android:paddingTop="20dp"
+        android:text="Preferred Contact Info:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/radioButton3">
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="Email" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="Phone" />
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="Text" />
     </RadioGroup>
 </LinearLayout>
