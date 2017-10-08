@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arrays">
+        <item>Often</item>
+        <item>Not Very Often</item>
+        <item>Very Often</item>
+    </string-array>
+</resources>

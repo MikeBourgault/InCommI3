@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hosted Login Page</string>
+    <string name="app_name">nTouch</string>
 
     <string name="com_auth0_client_id">qNSDDDTAo4W5hx53J3mQ39F3690ZH2SI</string>
     <string name="com_auth0_domain">jgeorge-incomm.auth0.com</string>
