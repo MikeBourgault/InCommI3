@@ -2,6 +2,8 @@ package com.auth0.samples;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,7 +41,12 @@ import retrofit2.Response;
 public class MainActivity extends Activity {
 
     private TextView token;
-    public static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    public String authToken = "Bearer " + getIntent().getExtras().getString("ACCESS_TOKEN");
+
+    private SharedPreferences realAuthToken;
+    private SharedPreferences.Editor editor;
+
+
 
 
 
@@ -47,14 +54,17 @@ public class MainActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        token = (TextView) findViewById(R.id.token);
-        Button loginButton = (Button) findViewById(R.id.loginButton);
+        Button loginButton = (Button)findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
             }
         });
+        realAuthToken = getSharedPreferences("key",Context.MODE_PRIVATE);
+        editor = realAuthToken.edit();
+        editor.putString("key",authToken);
+        editor.commit();
     }
 
     private void login() {
@@ -92,7 +102,9 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                token.setText("Logged in: " + credentials.getAccessToken());
+                                Intent intent = new Intent(MainActivity.this, debit_Transaction_Notification_Service.class);
+                                startService(intent);
+
                                 Log.d("Jwt token", credentials.getAccessToken());
 
                             }

@@ -2,31 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#bababa"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:Id="mainLayout">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_weight="0.35"
         android:scaleType="fitCenter"
-        android:src="@drawable/rotatelogo"
-        android:layout_weight="0.23" />
+        android:src="@drawable/rotatelogo" />
 
     <TextView
         android:id="@+id/token"
         android:layout_width="match_parent"
         android:layout_height="37dp"
+        android:layout_weight="0.39"
+        android:fontFamily="serif"
         android:gravity="center"
-        android:text="Not logged in"
-        android:textSize="21sp" />
+        android:paddingTop="20dp"
+        android:text="Welcome to nTouch"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@android:color/black" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="Log in" />
+        android:background="@android:color/holo_red_dark"
+        android:fontFamily="serif"
+        android:text="Log in"
+        android:textColor="@android:color/black"
+        android:textSize="28dp" />
 
 </LinearLayout>
