@@ -13,6 +13,8 @@ public class Transaction {
     String description;
     String date;
 
+    public String getId() {return id; }
+
     public String getCounterParty() {
         return counterParty;
     }

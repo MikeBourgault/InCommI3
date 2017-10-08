@@ -1,62 +1,97 @@
-<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.auth0.samples">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.auth0.samples">
 
-<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-<application android:allowBackup="true" android:icon="@drawable/logo" android:label="@string/app_name"
-    android:roundIcon="@drawable/logo" android:supportsRtl="true" android:theme="@style/AppTheme">
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <activity android:name=".MainActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SecondActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SECOND" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <activity android:name=".SecondActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.SECOND"/>
+        <dependency>
+            <groupId>
+                com.squareup.retrofit2
+            </groupId>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+            <artifactId>
+                retrofit
+            </artifactId>
 
-    <dependency>
-        <groupId>
-            com.squareup.retrofit2
-        </groupId>
+            <version>
+                2.3.0
+            </version>
+        </dependency>
+        <dependency>
+            <groupId>
+                com.squareup.retrofit2
+            </groupId>
 
-        <artifactId>
-            retrofit
-        </artifactId>
+            <artifactId>
+                converter-gson
+            </artifactId>
 
-        <version>
-            2.3.0
-        </version>
-    </dependency>
-    <dependency>
-        <groupId>
-            com.squareup.retrofit2
-        </groupId>
+            <version>
+                2.3.0
+            </version>
+        </dependency>
 
-        <artifactId>
-            converter-gson
-        </artifactId>
+        <service
+            android:name=".debit_Transaction_Notification_Service"
+            android:enabled="true"
+            android:exported="true"></service>
 
-        <version>
-            2.3.0
-        </version>
-    </dependency>
+        <activity android:name=".you_stopped_here">
+            <intent-filter>
+                <action android:name="android.intent.action.YOUSTOPPEDHERE" />
 
-    <service
-        android:name="com.auth0.samples.debit_Transaction_Notification_Service"
-        android:enabled="true"
-        android:exported="true">
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    </service>
+        <activity android:name=".twitter_yes">
+            <intent-filter>
+                <action android:name="android.intent.action.TWITTERYES" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".twitter_post">
+            <intent-filter>
+                <action android:name="android.intent.action.YOUSTOPPEDHERE" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".you_stopped_here">
+            <intent-filter>
+                <action android:name="android.intent.action.YOUSTOPPEDHERE" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
-</application>
+
+    </application>
 
 </manifest>

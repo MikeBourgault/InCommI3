@@ -4,6 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,12 +20,6 @@ import java.util.TimerTask;
 import java.util.concurrent.BlockingDeque;
 
 import retrofit2.*;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
 
 public class debit_Transaction_Notification_Service extends Service {
     String TAG = "Service Created";
@@ -28,6 +27,9 @@ public class debit_Transaction_Notification_Service extends Service {
     Timer timer = new Timer(true);
     boolean ifDebitInLast10Secs = false;
     Retrofit retrofit = MainActivity.builder.client(MainActivity.httpClient.build()).build();
+    private RelativeLayout relativeLayout;
+    private PopupWindow popupWindow;
+    private LayoutInflater layoutInflater;
 
 
     private boolean isRunning = false;
@@ -75,9 +77,9 @@ public class debit_Transaction_Notification_Service extends Service {
     public boolean pullDebitTransactions(boolean ifDebitInLast10Secs) {
         ifDebitInLast10Secs = false;
 
+        getTransactions();
 
-
-        if(MainActivity.get)
+        if()
 
 
     }
@@ -89,32 +91,8 @@ public class debit_Transaction_Notification_Service extends Service {
 
     }
 
-    public interface ApiClient {
-        @POST("/api/accounts")
-        Call<List<IncommAccount>> createUserAccount(@Header("Authorization") String authToken);
 
-        @GET("/api/accounts")
-        Call<List<IncommAccount>> getUserAccount(@Header("Authorization") String authToken);
-
-        @POST("/api/transactions")
-        Call<List<Transaction>> createTransaction(@Body Transaction data, @Header("Authorization") String authToken);
-
-        @GET("/api/transactions")
-        Call<List<Transaction>> getAllTransactions(@Header("Authorization") String authToken);
-
-        @GET("/api/transactions/(id)")
-        Call<List<Transaction>> getTransaction(@Path("id") String id, @Header("Authorization") String authToken);
-
-    }
-
-    String authToken = "Bearer " + getIntent().getExtras().getString("ACCESS_TOKEN");
-    public static Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl("https://incomm-act-mgt.appspot.com")
-            .addConverterFactory(GsonConverterFactory.create());
-    public Retrofit retrofit = builder.client(httpClient.build()).build();
-    public ApiClient client = retrofit.create(ApiClient.class);
-
-    public void getTransactions() {
+    public List<Transaction> getTransactions() {
         Call<List<Transaction>> transaction= client.getAllTransactions(authToken);
 
         transaction.enqueue(new Callback<List<Transaction>>() {
@@ -123,8 +101,14 @@ public class debit_Transaction_Notification_Service extends Service {
                 // The call was a success.  We successfully got a response
                 if (response.code() == 200) {
                     int amount = response.body().get(response.body().size() - 1).getAmount();
-                    ((TextView) findViewById(R.id.token))
-                            .setText(String.format("$%d.%02d", amount / 100, amount % 100));
+
+                    relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+                    layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                    ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.you_stopped_here, null);
+
+                    popupWindow = new PopupWindow(container, 400, 400, true);
+                    popupWindow.showAtLocation(relativeLayout, Gravity.NO_GRAVITY, 500, 500);
+
                 } else if(response.code() == 401) {
                     ((TextView) findViewById(R.id.token))
                             .setText("Authorization Error.");
