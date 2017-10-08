@@ -3,4 +3,16 @@
 
     <string name="com_auth0_client_id">qNSDDDTAo4W5hx53J3mQ39F3690ZH2SI</string>
     <string name="com_auth0_domain">jgeorge-incomm.auth0.com</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="username_hint">Username or Email</string>
+    <string name="password_hint">Password</string>
+    <string name="authorize">Authorize app</string>
+    <string name="cancel">Cancel</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="twitter_yes_content1">This application will be able to: \n\n • Read Tweets from your timeline.\n • Post using your Twitter account. </string>
+    <string name="twitter_yes_content2">\nThis application will not be able to: \n\n • Follow new people.\n • Update your profile. </string>
+    <string name="login_twitter">Authorize InTouch to use your account?</string>
+    <string name="twitter">Would you like to post this on Twitter?</string>
+    <string name="you_shopped_at">You shopped at</string>
 </resources>
