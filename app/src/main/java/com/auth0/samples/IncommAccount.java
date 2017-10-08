@@ -12,7 +12,7 @@ public class IncommAccount {
         return balance;
     }
 
-    public String getUserAccount() {
+    public String getUserAccount(String authToken) {
         return id;
     }
 }

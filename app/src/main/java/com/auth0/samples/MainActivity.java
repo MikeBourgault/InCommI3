@@ -39,7 +39,9 @@ import retrofit2.Response;
 public class MainActivity extends Activity {
 
     private TextView token;
-    public static boolean ifDebitInLast10Secs = false;
+    public static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,10 +127,10 @@ public class MainActivity extends Activity {
 
     public interface ApiClient {
         @POST("/api/accounts")
-        Call<IncommAccount> createUserAccount(@Header("Authorization") String authToken);
+        Call<List<IncommAccount>> createUserAccount(@Header("Authorization") String authToken);
 
         @GET("/api/accounts")
-        Call<IncommAccount> getUserAccount(@Header("Authorization") String authToken);
+        Call<List<IncommAccount>> getUserAccount(@Header("Authorization") String authToken);
 
         @POST("/api/transactions")
         Call<List<Transaction>> createTransaction(@Body Transaction data, @Header("Authorization") String authToken);
@@ -142,53 +144,39 @@ public class MainActivity extends Activity {
     }
 
     String authToken = "Bearer " + getIntent().getExtras().getString("ACCESS_TOKEN");
-
-    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    Retrofit.Builder builder = new Retrofit.Builder().baseUrl("https://incomm-act-mgt.appspot.com").addConverterFactory(GsonConverterFactory.create()
-    );
-
+    public static Retrofit.Builder builder = new Retrofit.Builder()
+            .baseUrl("https://incomm-act-mgt.appspot.com")
+            .addConverterFactory(GsonConverterFactory.create());
     public Retrofit retrofit = builder.client(httpClient.build()).build();
-    public IncommAccount client = retrofit.create(OkHttpClient.class);
+    public ApiClient client = retrofit.create(ApiClient.class);
 
-    private void getUserAccount() {
-        Call<IncommAccount> call = client.getUserAccount(authToken);
+    private void getTransactions() {
+        Call<List<Transaction>> transaction= client.getAllTransactions(authToken);
 
-        call.enqueue(new Callback<IncommAccount>() {
+        transaction.enqueue(new Callback<List<Transaction>>() {
             @Override
-            public void onResponse(Call<IncommAccount> call, Response<IncommAccount> response) {
+            public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
                 // The call was a success.  We successfully got a response
                 if (response.code() == 200) {
-                    int balance = response.body().getBalance();
-                    ((TextView) findViewById(R.id.balanceText)).setText(String.format("$%d.%02d", balance / 100, balance % 100));
+                    int amount = response.body().get(response.body().size() - 1).getAmount();
+                    ((TextView) findViewById(R.id.token))
+                            .setText(String.format("$%d.%02d", amount / 100, amount % 100));
                 } else if(response.code() == 401) {
-                    ((TextView) findViewById(R.id.balanceText)).setText("Authorization Error.");
+                    ((TextView) findViewById(R.id.token))
+                            .setText("Authorization Error.");
                 } else if(response.code() == 404) {
                     // User account doesn't exist, need to create one
-                    createUserAccount();
+                    ((TextView) findViewById(R.id.token))
+                            .setText("You don't exist.");
                 } else {
-                    ((TextView) findViewById(R.id.balanceText)).setText("Something went wrong with account details.");
+                    ((TextView) findViewById(R.id.token)).setText("Something went wrong with account details.");
                 }
-
             }
 
             @Override
-            public void onFailure(Call<IncommAccount> call, Throwable t) {
+            public void onFailure(Call<List<Transaction>> call, Throwable t) {
                 // The call failed.
                 // TODO: Handle the Error
-            }
-        });
-    }
-
-    private void createUserAccount() {
-        Call<IncommAccount> call = client.createUserAccount(authToken);
-
-        call.enqueue(new Callback<IncommAccount>() {
-            @Override
-            public void onResponse(Call<IncommAccount> call, Response<IncommAccount> response) {
-                if (response.code() == 200) {
-                    ((TextView) findViewById(R.id.balanceText)).setText(String.format("$%d.%02d", balance / 100, balance % 100));
-                }
             }
         });
     }
