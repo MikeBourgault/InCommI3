@@ -43,10 +43,9 @@ public class debit_Transaction_Notification_Service extends Service {
     private SharedPreferences preferences;
     public Retrofit retrofit = builder.client(httpClient.build()).build();
     public ApiClient client = retrofit.create(ApiClient.class);
-    private RelativeLayout relativeLayout;
-    private PopupWindow popupWindow;
-    private LayoutInflater layoutInflater;
     private String realAuthToken;
+    private String lastId;
+
 
 
 
@@ -57,8 +56,10 @@ public class debit_Transaction_Notification_Service extends Service {
         Toast.makeText(this, "Transaction Notification Service Created", Toast.LENGTH_SHORT).show();
 
         preferences = this.getSharedPreferences("key", MODE_WORLD_WRITEABLE);
+        realAuthToken = preferences.getString("key", "");
 
-        realAuthToken = preferences.getString("key","null");
+        preferences = this.getSharedPreferences("lastId", MODE_WORLD_WRITEABLE);
+        lastId = preferences.getString("lastId", "");
 
 
         boolean isRunning = true;
@@ -75,14 +76,7 @@ public class debit_Transaction_Notification_Service extends Service {
                 TimerTask checkForTransaction = new TimerTask() {
                     public void run() {
                         try {
-
-                            pullDebitTransactions(ifDebitInLast10Secs);
-
-                            if(ifDebitInLast10Secs) {
-
-                                Intent intent = new Intent(getApplicationContext(), you_stopped_here.class);
-                            }
-
+                            processTransactions();
 
                         } catch(Exception e) {
                             e.printStackTrace();
@@ -93,16 +87,6 @@ public class debit_Transaction_Notification_Service extends Service {
             }
         });
         return START_STICKY;
-    }
-
-    public boolean pullDebitTransactions(boolean ifDebitInLast10Secs) {
-        ifDebitInLast10Secs = false;
-
-        getTransactions();
-
-        if()
-
-
     }
 
     @Override
@@ -119,9 +103,6 @@ public class debit_Transaction_Notification_Service extends Service {
         @GET("/api/accounts")
         Call<IncommAccount> getUserAccount(@Header("Authorization") String realAuthToken);
 
-        @POST("/api/transactions")
-        Call<Transaction> createTransaction(@Body TransactionBody data, @Header("Authorization") String realAuthToken);
-
         @GET("/api/transactions")
         Call<List<Transaction>> getAllTransactions(@Header("Authorization") String realAuthToken);
 
@@ -131,7 +112,7 @@ public class debit_Transaction_Notification_Service extends Service {
     }
 
 
-    public List<Transaction> getTransactions() {
+    public void processTransactions() {
         Call<List<Transaction>> transactions = client.getAllTransactions(realAuthToken);
 
         transactions.enqueue(new Callback<List<Transaction>>() {
@@ -139,22 +120,30 @@ public class debit_Transaction_Notification_Service extends Service {
             public void onResponse(Call<List<Transaction>> call, Response<List<Transaction>> response) {
                 // The call was a success.  We successfully got a response
                 if (response.code() == 200) {
-                    int amount = response.body().get(response.body().size() - 1).getAmount();
+                    Transaction lastTransaction = response.body().get(response.body().size() - 1);
+                    if (lastTransaction.getType() == "debit") {
+                        if(lastId == "") {
+                            lastId = lastTransaction.getId();
+                        }
+                        else if (lastTransaction.getId() != lastId) {
+                            Intent intent = new Intent(debit_Transaction_Notification_Service.this, you_stopped_here.class);
+                            startActivity(intent);
 
-                    relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayoutyoustoppedhere);
-                    layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                    ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.you_stopped_here, null);
+                        }
+                    }
 
-                    popupWindow = new PopupWindow(container, 400, 400, true);
-                    popupWindow.showAtLocation(relativeLayout, Gravity.NO_GRAVITY, 500, 500);
 
+
+
+
+                    return;
                 } else if(response.code() == 401) {
-
+                    return;
                 } else if(response.code() == 404) {
                     // User account doesn't exist, need to create one
-
+                    return ;
                 } else {
-
+                    return ;
                 }
             }
 
@@ -164,6 +153,7 @@ public class debit_Transaction_Notification_Service extends Service {
                 // TODO: Handle the Error
             }
         });
+
     }
 
 

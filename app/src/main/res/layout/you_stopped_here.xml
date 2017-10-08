@@ -9,10 +9,11 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    android:id="@id/relativeLayoutyoustoppedhere">
+    android:id="@+id/relativeLayout"
+    >
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

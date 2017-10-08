@@ -15,6 +15,8 @@ public class Transaction {
 
     public String getId() {return id; }
 
+    public String getType() {return type;}
+
     public String getCounterParty() {
         return counterParty;
     }

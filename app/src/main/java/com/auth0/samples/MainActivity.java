@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 
     private SharedPreferences realAuthToken;
     private SharedPreferences.Editor editor;
+    private SharedPreferences lastId;
 
 
 
@@ -65,6 +66,9 @@ public class MainActivity extends Activity {
         editor = realAuthToken.edit();
         editor.putString("key",authToken);
         editor.commit();
+        lastId = getSharedPreferences("lastId",Context.MODE_PRIVATE);
+        editor = lastId.edit();
+        editor.putString("lastId", "");
     }
 
     private void login() {

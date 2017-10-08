@@ -56,7 +56,7 @@
         <service
             android:name=".debit_Transaction_Notification_Service"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".you_stopped_here">
             <intent-filter>
@@ -76,22 +76,19 @@
 
         <activity android:name=".twitter_post">
             <intent-filter>
-                <action android:name="android.intent.action.YOUSTOPPEDHERE" />
+                <action android:name="android.intent.action.TWITTERPOST" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".you_stopped_here">
+        <activity android:name=".twitter_failure">
             <intent-filter>
-                <action android:name="android.intent.action.YOUSTOPPEDHERE" />
+                <action android:name="android.intent.action.TWITTERFAILURE" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
     </application>
 
 </manifest>
